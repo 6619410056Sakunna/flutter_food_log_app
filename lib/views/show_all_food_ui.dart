@@ -14,7 +14,7 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
       appBar: AppBar(
         backgroundColor: Colors.pink,
         title: Text(
-          'Eat Eat Cake',
+          'Eat Eat LOG',
           style: TextStyle(
             fontSize: 25,
             color: Colors.white,
@@ -24,7 +24,12 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
       ),
       body: Center(
         child: Column(
-          children: [],
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              width: 200,
+            ),
+          ],
         ),
       ),
     );
