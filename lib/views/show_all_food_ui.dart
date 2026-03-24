@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_food_log_app/views/add_food_ui.dart';
 
 class ShowAllFoodUi extends StatefulWidget {
   const ShowAllFoodUi({super.key});
@@ -12,7 +13,7 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink,
+        backgroundColor: Colors.pink[900],
         title: Text(
           'Eat Eat LOG',
           style: TextStyle(
@@ -32,6 +33,22 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddFoodUi(),
+            )
+          );
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.pink[700],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
