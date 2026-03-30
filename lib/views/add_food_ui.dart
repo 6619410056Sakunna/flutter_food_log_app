@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_food_log_app/models/food.dart';
+import 'package:flutter_food_log_app/services/supabase_servive.dart';
+import 'package:intl/intl.dart';
 
 class AddFoodUi extends StatefulWidget {
   const AddFoodUi({super.key});
@@ -20,7 +23,9 @@ class _AddFoodUiState extends State<AddFoodUi> {
   //ตัวแปลเก็บวันที่กินString
   DateTime? foodDate;
 
+//เมธอดเปิดปฏิทินให้ผู้ใช้เลือก แล้วกำหนดค่าวันที่เลือกให้กับตัวแปร foodDate ที่สร้างไว้กับแสดงที่ TextField
   Future<void> pickDate() async {
+    //เปิดปฏิทิน
     DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -30,11 +35,56 @@ class _AddFoodUiState extends State<AddFoodUi> {
 
     if (picked != null) {
       setState(() {
+        //กําหนดค่าให้กับตัวแปร
         foodDate = picked;
-
+        //แสดงที่ TextField
         foodDateCtrl.text = DateFormat('yyyy-MM-dd').format(picked);
       });
     }
+  }
+
+  //เมธอดบันทึกข้อมูลไปที่ Supabase
+  void saveFood() async {
+    // Validate UI ตรวจสอบหน้าจอเบื้องต้น
+    if (foodNameCtrl.text.isEmpty ||
+        foodPriceCtrl.text.isEmpty ||
+        foodPersonCtrl.text.isEmpty ||
+        foodDateCtrl.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('กรุณากรอกข้อมูลให้ครบ'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    // แพ็กข้อมูล
+    Food food = Food(
+      foodName: foodNameCtrl.text,
+      foodMeal: foodMeal,
+      foodPrice: double.parse(foodPriceCtrl.text),
+      foodPerson: int.parse(foodPersonCtrl.text),
+      foodDate: foodDate!.toIso8601String(),
+    );
+
+    // ส่งไปบันทึกที่ Supabase ผ่าน SupabaseService
+    //สร้าง instance/object/ตัวแทน ของ SupabaseService
+    final service = SupabaseService();
+    await service.insertFood(food);
+
+    // แจ้งผลการทํางานกับผู้ใช้
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('บันทึกข้อมูลเรียบร้อยแล้ว'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+    // กลับไปหน้า ShowAllFoodUi
+    Navigator.pop(context);
   }
 
   @override
@@ -62,7 +112,7 @@ class _AddFoodUiState extends State<AddFoodUi> {
       ),
       body: Center(
           child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(20.0),
         child: Center(
           child: Column(
             children: [
@@ -240,15 +290,18 @@ class _AddFoodUiState extends State<AddFoodUi> {
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () {
-                  //แสดงปฏิทิน
+                  //แสดงปฏิทินให้ผู้ใช้เลือกแล้วเอามาแสดงที่ TextField นี้
+                  pickDate();
                 },
               ),
               SizedBox(height: 20),
               // ปุ่มบันทึก
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  saveFood();
+                },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: const Color.fromARGB(255, 141, 231, 131),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   ),
@@ -257,10 +310,12 @@ class _AddFoodUiState extends State<AddFoodUi> {
                     50,
                   ),
                 ),
-                child: Text("บันทึก",
-                    style: TextStyle(
-                      color: Colors.white,
-                    )),
+                child: Text(
+                  "บันทึก",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
               SizedBox(height: 10),
               // ปุ่มยกเลิก

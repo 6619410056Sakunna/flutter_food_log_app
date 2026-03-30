@@ -18,9 +18,12 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
   //สร้างinstance/object/ตัวแทนของsupabase
   final service = SupabaseService();
 
-  void loadAllFoods() async {
+  //สร้างmethodสำหรับดึงข้อมูลจากsupabase ผ่านทางsupabastservice
+  void loadAllFood() async {
+    //สร้างตัวแปลเก็บข้อมูลที่จะดึงค่าผ่านทาง supabase service
     final data = await service.getAllFood();
     setState(() {
+      //เก็บข้อมูลที่ได้จาก supabase service ไว้ในตัวแปร foods เพื่อใช้กับ body
       foods = data;
     });
   }
@@ -29,14 +32,14 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadAllFoods();
+    loadAllFood();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink[900],
+        backgroundColor: Colors.pink[700],
         title: Text(
           'Eat Eat LOG',
           style: TextStyle(
@@ -84,7 +87,7 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
                         ),
                         tileColor: index % 2 == 0
                             ? Colors.pink[50]
-                            : Colors.lightGreen,
+                            : const Color.fromARGB(255, 194, 239, 143),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -101,7 +104,11 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
               context,
               MaterialPageRoute(
                 builder: (context) => AddFoodUi(),
-              ));
+              )).then((value){
+                //กลับมาหน้านี้แล้วอยยากให้ทำอะไร
+                //เรียก loadAllFood() เพื่อกลับมาจากหน้า AddFoodUi เพื่อเป็น reload หน้าจอและข้อมูล
+                loadAllFood();
+              });
         },
         child: Icon(
           Icons.add,
