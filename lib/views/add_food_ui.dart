@@ -338,6 +338,7 @@ class _AddFoodUiState extends State<AddFoodUi> {
                   ),
                 ),
               ),
+              SizedBox(height: 10),
             ],
           ),
         ),
