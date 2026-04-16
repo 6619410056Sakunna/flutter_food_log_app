@@ -12,15 +12,27 @@ class SupabaseService {
   //เช่น เพิ่ม  แก้ไข ลบ ค้นหาตรวจสอบ ดึง ดู
   Future<List<Food>> getAllFood() async {
     //ดึงข้อมูลทั้งหมดจาก_food_tb in supabast
-    final data = await supabase.from('food_tb')
-                                .select('*')
-                                .order('foodDate',ascending: false);
+    final data = await supabase
+        .from('food_tb')
+        .select('*')
+        .order('foodDate', ascending: false);
     //แปลงข้อมูลที่ได้จาก supabast ซึ่งเป็น JSON มาใช้ในแอปฯ แล้วส่งผลกลับไป ณ จุดเรียกใช้เมธอด
     return data.map<Food>((e) => Food.fromJson(e)).toList();
   }
 
-  //สร้างmethodสำหรับเพิ่มข้อมูลอาหารใหม่ลงใน supabase 
+  //สร้างmethodสำหรับเพิ่มข้อมูลอาหารใหม่ลงใน supabase
   Future insertFood(Food food) async {
     await supabase.from('food_tb').insert(food.toJson());
   }
+
+  // สร้างmethodสำหรับแก้ไขข้อมูลอาหารใน food_tb
+  Future updateFood(String id, Food food) async {
+    await supabase.from('food_tb').update(food.toJson()).eq('id', id);
+  }
+
+  // สร้างmethodสำหรับลบข้อมูลอาหารใน food_tb
+  Future deleteFood(String id) async {
+    await supabase.from('food_tb').delete().eq('id', id);
+  }
+
 }

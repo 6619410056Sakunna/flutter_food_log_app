@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_food_log_app/models/food.dart';
 import 'package:flutter_food_log_app/services/supabase_servive.dart';
@@ -91,11 +90,11 @@ class _AddFoodUiState extends State<AddFoodUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink[900],
+        backgroundColor: Colors.pink[700],
         title: Text(
           'Eat Eat LOG(เพิ่มรายการอาหาร)',
           style: TextStyle(
-            fontSize: 25,
+            fontSize: 20,
             color: Colors.white,
           ),
         ),
@@ -320,7 +319,17 @@ class _AddFoodUiState extends State<AddFoodUi> {
               SizedBox(height: 10),
               // ปุ่มยกเลิก
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // เคลียร์หน้าจอและข้อมูล
+                  setState(() {
+                    foodNameCtrl.clear();
+                    foodPriceCtrl.clear();
+                    foodPersonCtrl.clear();
+                    foodDateCtrl.clear();
+                    foodMeal = 'เช้า';
+                    foodDate = null;
+                  });
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink,
                   shape: RoundedRectangleBorder(
@@ -338,7 +347,7 @@ class _AddFoodUiState extends State<AddFoodUi> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              
             ],
           ),
         ),

@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_food_log_app/models/food.dart';
 import 'package:flutter_food_log_app/views/add_food_ui.dart';
 import 'package:flutter_food_log_app/services/supabase_servive.dart';
+import 'package:flutter_food_log_app/views/update_del_food_ui.dart';
 
 class ShowAllFoodUi extends StatefulWidget {
   const ShowAllFoodUi({super.key});
@@ -43,7 +42,7 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
         title: Text(
           'Eat Eat LOG',
           style: TextStyle(
-            fontSize: 25,
+            fontSize: 20,
             color: Colors.white,
           ),
         ),
@@ -70,13 +69,28 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
                         top: 5,
                       ),
                       child: ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          // เปิดไปหน้าupdate del food ui แบบย่อนกลับได้
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UpdateDelFoodUi(
+                                //ส่งข้อมูลที่เลือกไปหน้า update del food ui
+                                food: foods[index],
+                              ),
+                            ),
+                          ).then((value) {
+                            //กลับมาหน้านี้แล้วอยากให้ทำอะไร
+                            //เรียก loadAllFood() เพื่อกลับมาจากหน้า updatedelfood ui เพื่อเป็น reload หน้าจอและข้อมูล
+                            loadAllFood();
+                          });
+                        },
                         leading: Image.asset(
                           'assets/images/food.png',
                           width: 50,
                         ),
                         trailing: Icon(
-                          Icons.info,
+                          Icons.edit,
                           color: Colors.red,
                         ),
                         title: Text(
@@ -104,11 +118,11 @@ class _ShowAllFoodUiState extends State<ShowAllFoodUi> {
               context,
               MaterialPageRoute(
                 builder: (context) => AddFoodUi(),
-              )).then((value){
-                //กลับมาหน้านี้แล้วอยยากให้ทำอะไร
-                //เรียก loadAllFood() เพื่อกลับมาจากหน้า AddFoodUi เพื่อเป็น reload หน้าจอและข้อมูล
-                loadAllFood();
-              });
+              )).then((value) {
+            //กลับมาหน้านี้แล้วอยยากให้ทำอะไร
+            //เรียก loadAllFood() เพื่อกลับมาจากหน้า AddFoodUi เพื่อเป็น reload หน้าจอและข้อมูล
+            loadAllFood();
+          });
         },
         child: Icon(
           Icons.add,
